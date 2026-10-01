@@ -130,8 +130,7 @@ Use a direct HTML container for institution logos. Do not wrap it in a
   class name, it is not tied to a particular organization.
 - On `lead`, the logo row sits at the bottom. Adding `title` moves larger logos
   to the top. On `closing`, the row also sits at the top.
-- `center-logo` places one white-padded mark at bottom center, or at the top on
-  `closing` slides.
+- `center-logo` places one white-padded mark at top center.
 
 ```html
 <img class="center-logo" src="assets/center.svg" alt="Center mark">

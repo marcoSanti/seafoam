@@ -2,9 +2,9 @@
   "name": "seafoam-sample",
   "private": true,
   "scripts": {
-    "html": "marp deck.md --theme ../seafoam.css --output deck.html",
-    "pdf": "marp deck.md --theme ../seafoam.css --output deck.pdf",
-    "watch": "marp deck.md --theme ../seafoam.css --watch"
+    "html": "marp deck.md --theme ../seafoam.css --allow-local-files --output deck.html",
+    "pdf": "marp deck.md --theme ../seafoam.css --allow-local-files --output deck.pdf",
+    "watch": "marp deck.md --theme ../seafoam.css --allow-local-files --watch"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "^4.0.0"

@@ -4,302 +4,351 @@ theme: seafoam
 html: true
 paginate: true
 math: true
+footer: Anonymous Systems Study · Technical Review
 ---
 
-<!-- _class: lead -->
+<!-- _class: lead title -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
 
-<span class="eyebrow">Engineering review · Q3</span>
+<div class="institution-logos"><img class="institution-logo unito-logo" src="assets/sampleco-logo.svg" alt="Example institution"><img class="institution-logo" src="assets/wavelabs-logo.svg" alt="Example partner"></div>
 
-# Seafoam Systems
+<span class="eyebrow">Anonymous technical review · 2026</span>
 
-### A light deck for the Dracula Waves theme
+# A Generic Systems Study
 
-<span class="subtitle">Rendering every utility, layout, and slide class in the theme.</span>
+<p class="subtitle">A complete, reusable demonstration of the Seafoam presentation theme.</p>
 
-<!-- _footer: Seafoam Systems · Engineering Review -->
+**Presenter Name**, Collaborator Name
 
----
+Event Name · Venue
 
-<!-- _class: title -->
-
-<header class="institution-logos">
-
-<img class="institution-logo" src="assets/sampleco-logo.svg" alt="SampleCo" />
-<img class="institution-logo" src="assets/wavelabs-logo.svg" alt="WaveLabs" />
-
-</header>
-
-# Logos
-
-Institution marks live in a `<header class="institution-logos">`; the `title`
-slide class pins them to the top. The samples above are self-authored marks so
-nothing is copied — swap in any permissively-licensed logo (Python's PSF
-mark, Marp's MIT mark, …).
-
-> Keep marks on a white chip so they read against the light palette.
+<img class="center-logo" src="assets/center-logo.svg" alt="Example center mark">
 
 ---
 
-## Agenda
+## Today
 
-1. Architecture overview
-2. Performance numbers
-3. Roadmap & timeline
-4. Closing
+<div class="grid cols-3">
+  <div class="card"><div class="metric">01</div><h3>Problem</h3><p>Frame a fictional systems challenge without domain-specific claims.</p></div>
+  <div class="card"><div class="metric">02</div><h3>Approach</h3><p>Show architecture, implementation, and delivery patterns.</p></div>
+  <div class="card"><div class="metric">03</div><h3>Evidence</h3><p>Present illustrative metrics, figures, and limitations.</p></div>
+</div>
 
 ---
 
 <!-- _class: section -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
 
-# Architecture
+# Problem
 
----
-
-## System overview
-
-```mermaid
-flowchart LR
-  A[Client] --> B[API Gateway]
-  B --> C[Services]
-  C --> D[(Database)]
-```
-
-> A request flows from the client through the gateway into the services layer,
-> with the database as the single source of truth.
-
-<div class="callout">
-
-**Callout** — a highlighted aside with an accent rule on the left.
-
-</div>
-
-<div class="warning">
-
-**Warning** — a caution band for things that deserve a second look.
-
-</div>
+One idea per slide, with clear visual resets between sections.
 
 ---
 
-## Architecture
+<!-- _class: compact -->
+
+# Why change the baseline?
+
+<div class="grid cols-3">
+  <div class="card"><h3>Repeated work</h3><p>Independent stages recompute equivalent intermediate results.</p></div>
+  <div class="card"><h3>Late feedback</h3><p>Consumers wait for complete batches before useful work begins.</p></div>
+  <div class="card"><h3>Hidden cost</h3><p>Operational overhead grows faster than the useful workload.</p></div>
+</div>
+
+<div class="callout tight-callout"><strong>Design question:</strong> can the same interface support earlier, cheaper hand-offs?</div>
+
+---
+
+<!-- _class: compact -->
+
+# Baseline profile
+
+<div class="visual-split narrow-image top">
+  <div><img class="paper-figure" src="assets/sample-figure.svg" alt="Illustrative quarterly profile"></div>
+  <div>
+    <h3>Illustrative trend</h3>
+    <p>Each stage adds more coordination than the one before it.</p>
+    <h3>Interpretation</h3>
+    <p>The chart is synthetic and demonstrates the figure/text format only.</p>
+    <p class="muted small">No production data or identifiable system is represented.</p>
+  </div>
+</div>
+
+---
+
+<!-- _class: compact -->
+
+# Baseline indicators
+
+<div class="figure-box short">
+  <img class="paper-figure" src="assets/sample-figure.svg" alt="Synthetic baseline chart">
+  <div class="figure-caption">Synthetic values for layout demonstration.</div>
+</div>
+
+<div class="grid cols-3 tight-grid">
+  <div class="card"><div class="metric">42%</div><p>illustrative idle time</p></div>
+  <div class="card"><div class="metric">3.4×</div><p>illustrative data movement</p></div>
+  <div class="card"><div class="metric">7 min</div><p>illustrative feedback delay</p></div>
+</div>
+
+---
+
+<!-- _class: section -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
+
+# Approach
+
+Keep the interface familiar; change when work becomes available.
+
+---
+
+<!-- _class: compact -->
+
+# Four design principles
+
+<div class="grid cols-4 tight-grid">
+  <div class="card"><h3>Compatible</h3><p>Preserve existing entry points.</p></div>
+  <div class="card"><h3>Incremental</h3><p>Expose useful units early.</p></div>
+  <div class="card"><h3>Observable</h3><p>Measure every boundary.</p></div>
+  <div class="card"><h3>Reversible</h3><p>Retain a safe fallback.</p></div>
+</div>
+
+---
+
+# Reference architecture
 
 <div class="architecture">
-
-<div class="architecture-box">Client</div>
-<span class="architecture-connector">→</span>
-<div class="architecture-box">Gateway</div>
-<span class="architecture-connector">→</span>
-<div class="architecture-box">Services</div>
-
+  <div class="box"><strong>Producer</strong>Creates units</div>
+  <span class="connector">→</span>
+  <div class="box"><strong>Coordinator</strong>Routes and records</div>
+  <span class="connector">→</span>
+  <div class="box"><strong>Consumer</strong>Uses units</div>
 </div>
+
+<div class="callout"><strong>Boundary:</strong> the coordinator owns ordering, retries, and visibility.</div>
 
 ---
 
-## Layouts
+<!-- _class: compact -->
 
-<figure class="figure-box">
+# Request lifecycle
 
-<img src="assets/sample-figure.svg" alt="Sample figure" />
+<div class="flow tight-flow"><span class="step">Accept</span><span class="arrow">→</span><span class="step">Validate</span><span class="arrow">→</span><span class="step">Route</span><span class="arrow">→</span><span class="step">Confirm</span></div>
 
-<figcaption class="figure-caption">Quarterly totals, `figure-box` short variant.</figcaption>
+<div class="callout tight-callout">Successful requests remain observable from entry to confirmation.</div>
 
-</figure>
-
-<div class="visual-split">
-
-**Left** — text beside a figure or chart.
-
-**Right** — the visual, kept in its own lane.
-
-</div>
-
-<div class="reference-range">
-
-<span class="range-track">
-
-<span class="range-labels">low / normal / high</span>
-<span class="range-zone" style="left: 8%; width: 46%;">target</span>
-<span class="range-marker" style="left: 78%;"></span>
-
-</span>
-
-</div>
+<div class="callout warning tight-callout"><strong>Fallback:</strong> reject ambiguous input before any state changes.</div>
 
 ---
 
-## Utilities
+<!-- _class: compact -->
 
-<span class="accent">accent</span> · <span class="green">green</span> · <span class="orange">orange</span> · <span class="small">small</span> · <span class="tiny">tiny</span> · <span class="muted">muted</span>
-
-A sentence with a <span class="citation">citation</span> and a **`mark`** highlight, plus an `<hr>`:
-
-<div class="badges">
-
-<span class="badge">badge</span> <span class="badge">badge</span> <span class="badge">badge</span>
-
-</div>
-
-<hr>
-
-<blockquote>Blockquote — pull a quote out of the flow.</blockquote>
-
----
-
-## Code sample
+# Focused implementation
 
 ```python
-from seafoam import pipeline
-
-def ingest(raw: bytes) -> int:
-    rows = pipeline.decode(raw)      # strings → pink, numbers → purple
-    return pipeline.store(rows)      # titles → green
+def process(item, store):
+    validated = validate(item)
+    result = transform(validated)
+    store.commit(result)
+    return result.id
 ```
 
-Inline `code` and `--muted--` text sit on the light palette.
+<div class="grid cols-2 tight-grid">
+  <div class="card"><h3>Small surface</h3><p>One explicit path is easier to test and explain.</p></div>
+  <div class="card"><h3>Visible boundary</h3><p><code>commit</code> is the only state-changing operation.</p></div>
+</div>
 
-A <span class="mark">highlighted mark</span> and an `<hr>` divider:
+---
+
+<!-- _class: compact -->
+
+# Package and provenance
+
+<div class="grid cols-2">
+  <div>
+    <h3>Release channels</h3>
+    <div class="badges"><img class="badge" src="assets/sampleco-logo.svg" alt="Example release badge"><img class="badge" src="assets/wavelabs-logo.svg" alt="Example compatibility badge"></div>
+  </div>
+  <div>
+    <h3>Reproducible reference</h3>
+    <div class="citation"><span class="citation-label">Reference</span><code>example.invalid/specification</code></div>
+    <p class="small muted">Placeholder links use the reserved <code>.invalid</code> domain.</p>
+  </div>
+</div>
+
+---
+
+# Delivery plan
+
+<div class="timeline timeline-3">
+  <div class="timeline-item"><span class="timeline-marker">1</span><h3>Prototype</h3><p>Validate the boundary</p></div>
+  <div class="timeline-item"><span class="timeline-marker">2</span><h3>Pilot</h3><p>Measure representative use</p></div>
+  <div class="timeline-item"><span class="timeline-marker">3</span><h3>Release</h3><p>Document and operate</p></div>
+</div>
+
+---
+
+<!-- _class: section -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
+
+# Evidence
+
+Use repeated formats so comparisons require less explanation.
+
+---
+
+<!-- _class: compact -->
+
+# Synthetic benchmark summary
+
+| Variant | Rate | p95 latency | Result |
+|---|---:|---:|---|
+| Baseline | 640/s | 61 ms | reference |
+| Candidate A | 1,200/s | 38 ms | improved |
+| Candidate B | 1,800/s | 24 ms | improved |
+
+<div class="fast-stats">
+  <p><strong>2.8×</strong><span>illustrative peak rate</span></p>
+  <p><strong>−61%</strong><span>illustrative p95 latency</span></p>
+  <p><strong>0</strong><span>real systems represented</span></p>
+</div>
+
+---
+
+# Full-size result
+
+<div class="figure-box tall">
+  <img class="paper-figure" src="assets/sample-figure.svg" alt="Large synthetic result chart">
+  <div class="figure-caption">The tall figure variant reserves attention for one result.</div>
+</div>
+
+---
+
+<!-- _class: compact -->
+
+# Result interpretation
+
+<div class="visual-split">
+  <div><img class="paper-figure" src="assets/sample-figure.svg" alt="Synthetic comparison chart"></div>
+  <div>
+    <h3 class="green">Earlier output</h3>
+    <p>The candidate begins useful work before the baseline completes.</p>
+    <h3 class="orange">Caveat</h3>
+    <p>The values are placeholders; validate the pattern with real measurements.</p>
+  </div>
+</div>
+
+---
+
+<!-- _class: compact -->
+
+# Reading a threshold
+
+<div class="reference-range">
+  <div class="range-track"><span class="range-zone range-low"></span><span class="range-zone range-normal"></span><span class="range-zone range-high"></span><span class="range-marker"></span></div>
+  <div class="range-labels"><span>Low</span><span>Expected</span><span>High</span></div>
+</div>
+
+<div class="grid cols-2">
+  <div class="card"><h3>Marker</h3><p>The sample value remains inside the expected band.</p></div>
+  <div class="card"><h3>Decision</h3><p>Investigate only when repeated observations leave the band.</p></div>
+</div>
+
+---
+
+# Four-stage validation
+
+<div class="timeline timeline-4">
+  <div class="timeline-item"><span class="timeline-marker">1</span><h3>Define</h3><p>Choose the question</p></div>
+  <div class="timeline-item"><span class="timeline-marker">2</span><h3>Measure</h3><p>Collect consistently</p></div>
+  <div class="timeline-item"><span class="timeline-marker">3</span><h3>Compare</h3><p>Use one baseline</p></div>
+  <div class="timeline-item"><span class="timeline-marker">4</span><h3>Review</h3><p>Record limitations</p></div>
+</div>
+
+---
+
+<!-- _class: section -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
+
+# Delivery
+
+Move from evidence to operation without hiding uncertainty.
+
+---
+
+<!-- _class: compact -->
+
+# Five operational gates
+
+<div class="timeline">
+  <div class="timeline-item"><span class="timeline-marker">1</span><h3>Scope</h3><p>Bound the change</p></div>
+  <div class="timeline-item"><span class="timeline-marker">2</span><h3>Build</h3><p>Keep it small</p></div>
+  <div class="timeline-item"><span class="timeline-marker">3</span><h3>Test</h3><p>Exercise failure</p></div>
+  <div class="timeline-item"><span class="timeline-marker">4</span><h3>Ship</h3><p>Watch signals</p></div>
+  <div class="timeline-item"><span class="timeline-marker">5</span><h3>Learn</h3><p>Update the record</p></div>
+</div>
+
+---
+
+<!-- _class: compact -->
+
+# Communication details
+
+<p><span class="accent">Accent</span> identifies structure; <span class="green">green</span> marks success; <span class="orange">orange</span> marks caution.</p>
+
+<p class="small">Small supporting text can contain <span class="muted">muted context</span>, while <span class="tiny">tiny text is reserved for metadata</span>.</p>
+
+> A concise quotation can reset the pace without becoming another layout.
+
+Use <mark>highlighting</mark> sparingly, link to [reserved examples](https://example.invalid), and keep inline `code` short.
 
 <hr>
 
----
-
-## Throughput by region
-
-| Region | RPS | Latency (ms) | Status |
-|---|---|---|---|
-| eu-west | 1 200 | 38 | ✅ |
-| us-east | 1 800 | 24 | ✅ |
-| ap-south | 640 | 61 | ⚠️ |
-
-<div class="grid cols-2 tight-grid">
-
-<div class="metric">
-
-**1 800 RPS**
-
-<small>peak throughput, us-east</small>
-
-</div>
-
-<div class="metric">
-
-**38 ms**
-
-<small>median latency, eu-west</small>
-
-</div>
-
-</div>
-
----
-
-## Two-column grid
-
-<div class="grid cols-2">
-
-<div>
-
-### Column A
-
-- Feature one
-- Feature two
-- Feature three
-
-</div>
-
-<div>
-
-### Column B
-
-- Item four
-- Item five
-- Item six
-
-</div>
-
-</div>
-
----
-
-## Timeline
-
-<div class="timeline timeline-3">
-
-<div class="timeline-item">
-
-<span class="timeline-marker"></span>
-
-**Q1** — Foundation
-
-</div>
-
-<div class="timeline-item">
-
-<span class="timeline-marker"></span>
-
-**Q2** — Public beta
-
-</div>
-
-<div class="timeline-item">
-
-<span class="timeline-marker"></span>
-
-**Q3** — GA
-
-</div>
-
-</div>
-
----
-
-## Fast stats
-
-<div class="fast-stats">
-
-- **99.9%** uptime
-- **< 50 ms** p95 latency
-- **1.2 M** events / day
-
-</div>
-
----
-
-## Flow
-
-<div class="flow">
-
-<span class="step">Ingest</span> <span class="arrow">→</span>
-<span class="step">Transform</span> <span class="arrow">→</span>
-<span class="step">Serve</span>
-
-</div>
+The divider closes one thought before the next begins.
 
 ---
 
 <!-- _class: invert -->
 
-## Invert slide
+# One contrast moment
 
-Emphasis flips: dark background, light text, for contrast moments.
+Dark emphasis works best for a single memorable statement.
+
+> Compatibility is a feature only when the fallback remains clear.
 
 ---
 
-## Closing
+<!-- _class: sources -->
 
-<div class="closing-grid closing-grid-4">
+# Sources and assumptions
 
-- **Web** seafoam.example
-- **Mail** hello@seafoam.example
-- **Docs** docs.seafoam.example
-- **Repo** github.com/seafoam
+1. All organizations, people, metrics, links, and results in this deck are fictional.
+2. Example URLs use the reserved `.invalid` domain and cannot identify a real service.
+3. Charts demonstrate theme layouts, not empirical findings.
+4. The sample uses only self-authored SVG assets stored under `sample/assets/`.
 
-</div>
+<div class="citation"><span class="citation-label">Theme demo</span><code>sample/deck.md</code></div>
 
 ---
 
 <!-- _class: closing -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
 
 # Thank you
 
-Questions & discussion welcome.
+Questions and discussion are welcome.
+
+<div class="closing-grid closing-grid-4">
+  <div class="closing-contact"><h3>Web</h3><code>example.invalid</code></div>
+  <div class="closing-contact"><h3>Mail</h3><code>hello@example.invalid</code></div>
+  <div class="closing-contact"><h3>Docs</h3><code>docs.example.invalid</code></div>
+  <div class="closing-contact"><h3>Repo</h3><code>code.example.invalid</code></div>
+</div>
+
+<div class="qr-corner"><div class="qr-block"><img class="qr-code" src="assets/sample-qr.svg" alt="Decorative sample QR code">Sample link</div></div>

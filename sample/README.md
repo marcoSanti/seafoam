@@ -1,30 +1,68 @@
-# Sample deck — Dracula Waves Light
+# Seafoam sample deck
 
-A self-contained deck demonstrating the `seafoam` theme with
-Marp. No external assets required.
+An anonymous 25-slide technical presentation demonstrating every public
+component in the [`seafoam`](../seafoam.css) Marp theme.
 
-## Render
+![Sample title slide](../screenshots/slide-01.png)
+
+## Build
+
+Install the local Marp CLI and render both formats:
 
 ```bash
-# zero-dependency (uses the global marp CLI)
-npx @marp-team/marp-cli deck.md --theme ../seafoam.css --output deck.html
-
-# or via package scripts (npm install first for the local CLI)
-npm run html   # -> deck.html
-npm run pdf    # -> deck.pdf (needs Chrome/Chromium)
+npm install
+npm run html   # deck.html
+npm run pdf    # deck.pdf; requires Chrome/Chromium
 ```
 
-Open `deck.html` in a browser. The front matter is the canonical starting
-point for any deck using this theme.
+To render without installing the local dependency first:
 
-## What it shows
+```bash
+npx @marp-team/marp-cli deck.md \
+  --theme ../seafoam.css \
+  --allow-local-files \
+  --output deck.html
+```
 
-`lead` and `title` slides, `institution-logos` headers, `section` dividers,
-highlighted code, a table with `metric` cards, a two-column `grid`, `timeline`
-with markers, `fast-stats`, `flow`, `callout`/`warning`, `architecture`,
-`reference-range`, figure helpers, text utilities (`eyebrow`, `accent`,
-`badges`, `mark`, …), an `invert` slide, and a `closing` slide.
+Local asset access is required because the deck uses SVGs from [`assets/`](assets/).
 
-The logos under `assets/` are self-authored sample marks so the deck is
-copyright-free — swap in any permissively-licensed logo (Python's PSF mark,
-Marp's MIT mark, …).
+## Content
+
+The deck follows a conference-style technical narrative:
+
+1. Problem framing
+2. Proposed approach
+3. Synthetic evidence
+4. Delivery and operational guidance
+5. Sources and closing contacts
+
+All organizations, people, links, metrics, and results are fictional. Example
+URLs use the reserved `.invalid` domain.
+
+## Component coverage
+
+| Area | Components demonstrated |
+|---|---|
+| Slide variants | `lead`, `title`, `section`, `compact`, `invert`, `sources`, `closing` |
+| Branding | `institution-logos`, `institution-logo`, `unito-logo`, `center-logo` |
+| Layouts | `grid`, `cols-2`, `cols-3`, `cols-4`, `visual-split`, `figure-box` |
+| Process | `flow`, `timeline`, `architecture`, `reference-range` |
+| Content | `card`, `metric`, `callout`, `warning`, `citation`, `badges`, `fast-stats` |
+| Closing | `closing-grid`, `closing-contact`, `qr-corner`, `qr-block`, `qr-code` |
+| Utilities | Text colors/sizes, tight spacing, tables, code, blockquotes, `<mark>`, `<hr>` |
+
+The SVG assets are self-authored placeholders and may be replaced with your
+own logos, figures, badges, and QR code.
+
+## Files
+
+| Path | Purpose |
+|---|---|
+| [`deck.md`](deck.md) | Canonical sample source |
+| `deck.html` | Generated browser presentation |
+| `deck.pdf` | Generated PDF presentation |
+| [`assets/`](assets/) | Local anonymous SVG assets |
+| [`package.json`](package.json) | Reproducible Marp commands |
+
+For the complete component API and copyable snippets, see the
+[main Seafoam documentation](../README.md).

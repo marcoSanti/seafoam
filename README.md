@@ -1,53 +1,38 @@
 # Seafoam
 
-A standalone [Marp](https://marp.app/) / Marpit theme (`seafoam.css`, 1280x720):
-a light, low-contrast variant of the classic Dracula palette, dressed with soft
-wave motifs for title slides and section dividers. It ships with a
-ready-to-render sample deck in [`sample/`](sample/).
-
-**Seafoam** takes its color system and typography from the
-[Dracula Marp theme](https://github.com/dracula/marp), and its wave
-backgrounds, rounded code blocks, and two-column layout from the
-[Wave Marp theme](https://github.com/JuliusWiedemann/MarpThemeWave) — then
-remaps everything to a light scheme and layers on structural slide classes
-(`lead`, `section`, `title`, `closing`), layout utilities, and figure helpers.
+A light [Marp](https://marp.app/) theme for technical presentations. Seafoam
+combines a Dracula-inspired color system with soft wave motifs, structured
+slide variants, figure layouts, process diagrams, and compact presentation
+utilities.
 
 ![Seafoam title slide](screenshots/slide-01.png)
 
----
+**1280×720 · Marp CLI v4+ · HTML layouts · PDF-ready**
 
-## What it borrows, and from where
+## Contents
 
-**Seafoam** is a deliberate mashup of two established Marp themes.
+- [Quick start](#quick-start)
+- [Slide variants](#slide-variants)
+- [Headers, footers, and logos](#headers-footers-and-logos)
+- [Layouts](#layouts)
+- [Components](#components)
+- [Text and native elements](#text-and-native-elements)
+- [Modifier reference](#modifier-reference)
+- [Sample deck](#sample-deck)
+- [Gallery](#gallery)
+- [Palette](#palette)
+- [Credits](#credits)
 
-- **Palette and typography** come from the
-  [Dracula Marp theme](https://github.com/dracula/marp): the full Dracula
-  color set as CSS variables, the Highlight.js token colors, the
-  header/footer/pagination boxes, table styling, and the `h1`–`h6` color
-  hierarchy — all re-tinted for a light background.
-- **Waves and code/columns** come from the
-  [Wave Marp theme](https://github.com/JuliusWiedemann/MarpThemeWave): the
-  wave footer band, rounded code blocks, and two-column layout (its
-  `.columns` becomes `grid`/`cols-*` here).
+## Quick start
 
-The light palette is the theme's own contribution — each Dracula hue is
-desaturated and darkened for readability on a `#f8fafc` background while
-keeping its semantic role (see [Palette](#palette)). The wave SVGs are
-inlined `data:` URIs rather than remote images, so the theme is
-self-contained and works offline.
+### Requirements
 
----
+- [Marp CLI](https://github.com/marp-team/marp-cli) v4+ or Marp for VS Code.
+- `html: true` when using the HTML components documented below. Plain Markdown,
+  slide classes, tables, and fenced code do not require it.
+- `--allow-local-files` when local images or SVGs are referenced.
 
-## Requirements
-
-- [Marp CLI](https://github.com/marp-team/marp-cli) (v4+, includes Marpit)
-  or the Marp for VS Code extension.
-- `html: true` in front matter — the layout components use raw HTML.
-
-## Install / use
-
-Drop `seafoam.css` anywhere and point Marp at it. In a deck's front matter set
-the theme and enable HTML:
+Create `deck.md`:
 
 ```yaml
 ---
@@ -58,220 +43,244 @@ paginate: true
 ---
 ```
 
-Render from the command line, passing the stylesheet explicitly:
+Render it with the theme file:
 
 ```bash
-marp deck.md --theme path/to/seafoam.css --output deck.html
+npx @marp-team/marp-cli deck.md \
+  --theme path/to/seafoam.css \
+  --allow-local-files \
+  --output deck.html
 ```
 
-Marp resolves `theme: seafoam` by the `@theme` name in the CSS; the `--theme`
-flag points at the file itself. HTML must be enabled when using the layout
-components below.
+Use `--pdf` and a `.pdf` output path to build a PDF. Marp resolves
+`theme: seafoam` from the `@theme` name inside `seafoam.css`; `--theme` tells
+the CLI where that stylesheet lives.
 
-## Syntax highlighting
+> The wave artwork is embedded in the CSS. Inter is loaded from Google Fonts
+> when available and falls back to system sans-serif fonts offline.
 
-Fenced code blocks use Marp's built-in Highlight.js parser and the theme's
-token colors. Add a language after the opening fence:
+## Slide variants
 
-````markdown
-```python
-def greet(name):
-    return f"Hello, {name}"
-```
-````
-
-Common language identifiers include `python`, `javascript`, `typescript`,
-`bash`, `json`, `yaml`, and `cpp`. Blocks without a language remain
-unhighlighted.
-
-## Slide classes
-
-Use Marp's local class directive before a slide:
+Set a slide class with a local Marp directive:
 
 ```markdown
-<!-- _class: lead -->
+<!-- _class: lead title -->
 ```
 
-| Class | Purpose |
+| Class | Use |
 |---|---|
-| `lead` | Title slide with wave footer and gradient heading |
-| `section` | Centered section-divider slide with wave background |
-| `invert` | Dark-background variant (flips light/dark emphasis) |
-| `title` | Title slide with large top logo |
-| `closing` | Closing slide with contact grid |
-| `compact` | Smaller type for dense content |
-| `sources` | Smaller type for references |
+| `lead` | Main title layout with a large heading and wave footer |
+| `title` | Modifier for `lead` that moves large institution logos to the top |
+| `section` | Centered section divider with a wave background |
+| `invert` | Dark emphasis slide |
+| `closing` | Closing layout for contacts and a QR panel |
+| `compact` | 22px body text for dense technical slides |
+| `sources` | 18px body text for references and assumptions |
 
-`lead`, `section`, `title`, and `closing` are the main structural variants.
-`compact` and `sources` are text-density tweaks.
-
-## Headers and footers
-
-Marp renders header/footer text and the page counter through Marpit's own
-`section::after`; this theme only styles their boxes. Use normal Marp
-directives:
+Recommended title pattern:
 
 ```markdown
-<!--
-header: Section title
-footer: Deck footer
--->
+<!-- _class: lead title -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
+
+<span class="eyebrow">Technical review · 2026</span>
+
+# Presentation title
+
+<p class="subtitle">One concise sentence that frames the deck.</p>
+
+**Presenter Name**, Collaborator Name
 ```
 
-The footer and page counter sit on a solid wave backdrop. You can place
-institution logos in the header with an HTML layout:
+Section dividers normally hide pagination and the footer:
+
+```markdown
+<!-- _class: section -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
+
+# Evaluation
+```
+
+## Headers, footers, and logos
+
+Marp supplies header, footer, and pagination elements. Seafoam positions and
+styles them over the wave footer:
+
+```yaml
+---
+header: Section label
+footer: Anonymous Study · Technical Review
+---
+```
+
+Use a direct HTML container for institution logos. Do not wrap it in a
+`<header>` element: Marp reserves that element for its own header directive.
 
 ```html
-<header>
-  <div class="institution-logos">
-    <img class="institution-logo unito-logo" src="assets/unito.png">
-    <img class="institution-logo" src="assets/partner.png">
-  </div>
-</header>
+<div class="institution-logos">
+  <img class="institution-logo unito-logo" src="assets/institution.svg" alt="Institution name">
+  <img class="institution-logo" src="assets/partner.svg" alt="Partner name">
+</div>
 ```
 
-`institution-logo` keeps the logo at a fixed height; `unito-logo` gives a
-slightly taller variant. On `lead` slides the logo block moves to the bottom
-of the slide; on `title` slides it sits larger at the top; on `closing` slides
-it stays at the top.
+- `institution-logo` applies consistent sizing.
+- `unito-logo` is an optional taller-logo modifier; despite the historical
+  class name, it is not tied to a particular organization.
+- On `lead`, the logo row sits at the bottom. Adding `title` moves larger logos
+  to the top. On `closing`, the row also sits at the top.
+- `center-logo` places one white-padded mark at bottom center, or at the top on
+  `closing` slides.
 
-## Grid and cards
+```html
+<img class="center-logo" src="assets/center.svg" alt="Center mark">
+```
 
-`cols-2` and `cols-3` create equal-width columns. `cols-4` creates a 2x2 grid.
+## Layouts
+
+### Grids and cards
+
+Always combine a column class with `grid`:
+
+| Markup | Result |
+|---|---|
+| `grid cols-2` | Two equal columns |
+| `grid cols-3` | Three equal columns |
+| `grid cols-4` | Four cards arranged as a 2×2 grid |
 
 ```html
 <div class="grid cols-3">
   <div class="card"><h3>First</h3><p>Short description.</p></div>
   <div class="card"><h3>Second</h3><p>Short description.</p></div>
-  <div class="card"><h3>Third</h3><p>Short description.</p></div>
+  <div class="card"><div class="metric">42%</div><p>Key result</p></div>
 </div>
 ```
 
-Use `metric` for a large value inside a card:
+`card` adds heading structure. `metric` creates a large display value and can
+be used inside or outside a card.
 
-```html
-<div class="card">
-  <div class="metric">120M</div>
-  <p>parameters</p>
-</div>
-```
+### Figures
 
-## Figures
-
-Use `paper-figure` inside a fixed-height `figure-box` to keep plots within the
-slide while preserving their aspect ratio. Add `short` or `tall` to select a
-245px or 400px container; the default is 360px.
+`paper-figure` constrains and frames an image. `figure-box` centers a figure;
+`short` and `tall` change its maximum image height.
 
 ```html
 <div class="figure-box tall">
-  <img class="paper-figure" src="assets/results.png">
+  <img class="paper-figure" src="assets/results.png" alt="Comparison chart">
+  <div class="figure-caption">Synthetic comparison across four stages.</div>
 </div>
 ```
 
-Use `visual-split` for a large figure beside explanatory text. The first child
-is the figure panel and the second is the text panel. Add `narrow-image` when
-the figure should stay at a fixed 550px column.
+| Variant | Maximum image height |
+|---|---:|
+| Default | 320px |
+| `figure-box short` | 220px |
+| `figure-box tall` | 400px |
+
+`visual-split` expects exactly two direct `<div>` children: a figure panel,
+then explanatory content. Add `narrow-image` for a fixed 550px figure column
+and `top` to align both panels at the top.
 
 ```html
-<div class="visual-split">
-  <div><img class="paper-figure" src="assets/results.png"></div>
+<div class="visual-split narrow-image top">
+  <div><img class="paper-figure" src="assets/results.png" alt="Results chart"></div>
   <div>
     <h3>Main result</h3>
-    <p>Short explanation of the figure.</p>
+    <p>Explain the result in one or two short paragraphs.</p>
   </div>
 </div>
 ```
 
-The optional spacing classes `tight-grid`, `tight-flow`, and `tight-callout`
-reduce vertical gaps on dense slides. These utilities and all figure layouts
-are opt-in, so they do not alter existing slides unless explicitly used.
+### Flow
 
-## Timeline
-
-The timeline supports five equally spaced stages. Add `timeline-4` for four
-stages:
-
-```html
-<div class="timeline">
-  <div class="timeline-item"><div class="timeline-marker">1</div><h3>Collect</h3><p>Input data</p></div>
-  <div class="timeline-item"><div class="timeline-marker">2</div><h3>Process</h3><p>Prepare data</p></div>
-  <div class="timeline-item"><div class="timeline-marker">3</div><h3>Analyze</h3><p>Find structure</p></div>
-  <div class="timeline-item"><div class="timeline-marker">4</div><h3>Validate</h3><p>Measure errors</p></div>
-  <div class="timeline-item"><div class="timeline-marker">5</div><h3>Present</h3><p>Show results</p></div>
-</div>
-```
-
-```html
-<div class="timeline timeline-4">
-  <!-- Four timeline-item elements -->
-</div>
-```
-
-## Flow and callouts
-
-Use `flow`, `step`, and `arrow` for short sequential processes:
+Use `flow` with alternating `step` and `arrow` children:
 
 ```html
 <div class="flow">
-  <div class="step"><strong>Input</strong></div>
-  <div class="arrow">→</div>
-  <div class="step"><strong>Output</strong></div>
+  <span class="step">Accept</span>
+  <span class="arrow">→</span>
+  <span class="step">Validate</span>
+  <span class="arrow">→</span>
+  <span class="step">Confirm</span>
 </div>
 ```
 
-Use `callout` for a conclusion and add `warning` for cautionary text:
+### Timeline
+
+The default timeline expects five stages. Use `timeline-3` or `timeline-4`
+for exactly three or four stages.
+
+```html
+<div class="timeline timeline-3">
+  <div class="timeline-item"><span class="timeline-marker">1</span><h3>Prototype</h3><p>Validate</p></div>
+  <div class="timeline-item"><span class="timeline-marker">2</span><h3>Pilot</h3><p>Measure</p></div>
+  <div class="timeline-item"><span class="timeline-marker">3</span><h3>Release</h3><p>Operate</p></div>
+</div>
+```
+
+### Architecture
+
+`architecture` is a fixed three-node pipeline. Use exactly three `box`
+children separated by two `connector` elements.
+
+```html
+<div class="architecture">
+  <div class="box"><strong>Producer</strong>Creates units</div>
+  <span class="connector">→</span>
+  <div class="box"><strong>Coordinator</strong>Routes units</div>
+  <span class="connector">→</span>
+  <div class="box"><strong>Consumer</strong>Uses units</div>
+</div>
+```
+
+## Components
+
+### Callouts
+
+`warning` modifies `callout`; it is not a standalone component.
 
 ```html
 <div class="callout">Main conclusion.</div>
 <div class="callout warning">Important limitation.</div>
 ```
 
-## Closing slide
-
-`closing` lays out contact info and a QR code. Use the `closing-grid` /
-`closing-grid-4` layout with `closing-contact` entries, and `qr-code` /
-`qr-block` for a QR panel:
+### Citation
 
 ```html
-<!-- _class: closing -->
-# Thanks
-
-<div class="closing-grid closing-grid-4">
-  <div class="closing-contact"><h3>Email</h3><p>name@example.com</p></div>
-  <!-- ... -->
+<div class="citation">
+  <span class="citation-label">Reference</span>
+  <code>example.invalid/specification</code>
 </div>
 ```
 
+### Badges
+
+`badges` vertically stacks image elements carrying the `badge` class.
+
 ```html
-<div class="qr-corner">
-  <div class="qr-block"><img class="qr-code" src="assets/qr.png">Scan for slides</div>
+<div class="badges">
+  <img class="badge" src="assets/build-status.svg" alt="Build passing">
+  <img class="badge" src="assets/license.svg" alt="License">
 </div>
 ```
 
-`dare-center` centers a block horizontally near the bottom of the slide (top
-on `title`/`closing` slides). `dare-logo` renders a white-padded logo. The
-`qr-code` image is forced pixelated and sits on a white rounded panel so it
-scans cleanly.
+### Fast statistics
 
-## Architecture diagram
-
-Use `architecture` with `.box` nodes and `.connector` arrows for a horizontal
-pipeline:
+Each statistic must be a `<p>` containing a `<strong>` value followed by a
+`<span>` caption.
 
 ```html
-<div class="architecture">
-  <div class="box"><strong>Ingest</strong>Load data</div>
-  <div class="connector">→</div>
-  <div class="box"><strong>Process</strong>Clean data</div>
-  <div class="connector">→</div>
-  <div class="box"><strong>Serve</strong>Expose API</div>
+<div class="fast-stats">
+  <p><strong>2.8×</strong><span>illustrative peak rate</span></p>
+  <p><strong>−61%</strong><span>illustrative latency</span></p>
 </div>
 ```
 
-## Reference range diagram
+### Reference range
 
-`reference-range` draws a low/normal/high band with a marker showing the
-current value:
+The track requires three zones, a marker, and three matching labels. Set the
+marker position inline per slide; 61% is the CSS default.
 
 ```html
 <div class="reference-range">
@@ -279,126 +288,176 @@ current value:
     <span class="range-zone range-low"></span>
     <span class="range-zone range-normal"></span>
     <span class="range-zone range-high"></span>
-    <span class="range-marker"></span>
+    <span class="range-marker" style="left: 40%"></span>
   </div>
-  <div class="range-labels"><span>Low</span><span>Normal</span><span>High</span></div>
+  <div class="range-labels"><span>Low</span><span>Expected</span><span>High</span></div>
 </div>
 ```
 
-The marker is positioned by its `left` percentage (61% by default); edit that
-value in the CSS or inline to move it.
+The marker caption is the CSS-generated word `value`. Change
+`.range-marker::before` in a custom theme override if a different caption is
+required.
 
-## Text utilities
+### Closing layout
+
+`closing-grid-4` modifies `closing-grid` into four columns. Use four
+`closing-contact` children. `qr-corner` positions a `qr-block` in the upper
+right; `qr-code` applies scannable image treatment.
+
+```markdown
+<!-- _class: closing -->
+<!-- _paginate: false -->
+<!-- _footer: '' -->
+
+# Thank you
+
+<div class="closing-grid closing-grid-4">
+  <div class="closing-contact"><h3>Web</h3><code>example.invalid</code></div>
+  <div class="closing-contact"><h3>Mail</h3><code>hello@example.invalid</code></div>
+  <div class="closing-contact"><h3>Docs</h3><code>docs.example.invalid</code></div>
+  <div class="closing-contact"><h3>Repo</h3><code>code.example.invalid</code></div>
+</div>
+
+<div class="qr-corner">
+  <div class="qr-block">
+    <img class="qr-code" src="assets/qr.svg" alt="Link to slides">
+    Slides
+  </div>
+</div>
+```
+
+## Text and native elements
+
+### Text utilities
 
 | Class | Effect |
 |---|---|
-| `subtitle` | Wide subtitle on lead slides |
-| `eyebrow` | Uppercase label on lead slides |
+| `subtitle` | Wide subtitle, typically used on lead slides |
+| `eyebrow` | Uppercase lead-slide label |
 | `muted` | Secondary text color |
 | `accent` | Cyan text |
-| `green` | Green text |
-| `orange` | Orange text |
+| `green` | Success-colored text |
+| `orange` | Caution-colored text |
 | `small` | 76% font size |
 | `tiny` | 62% font size |
 
-`citation` renders a centered quoted source in a bordered box, with an optional
-`citation-label`:
+### Markdown elements
 
-```html
-<div class="citation"><span class="citation-label">Source:</span> <code>paper.pdf</code></div>
+Seafoam styles headings, links, lists, tables, inline code, fenced code,
+images, `<blockquote>`, `<mark>`, and `<hr>` without additional classes.
+
+```markdown
+> A short quotation can reset the slide's pace.
+
+Use <mark>highlighting</mark> sparingly and keep inline `code` short.
+
+<hr>
 ```
 
-`fast-stats` renders a large green value over a small caption:
+### Syntax highlighting
 
-```html
-<div class="fast-stats">
-  <p><strong>120M</strong><span>parameters</span></p>
-  <p><strong>0.2ms</strong><span>latency</span></p>
-</div>
+Fenced code blocks use Marp's Highlight.js integration:
+
+````markdown
+```python
+def process(item):
+    return transform(item)
 ```
+````
 
-Keep each slide focused on one point. Prefer open layouts and short text over
-adding more containers.
+Common identifiers include `python`, `javascript`, `typescript`, `bash`,
+`json`, `yaml`, and `cpp`.
 
----
+## Modifier reference
 
-## Sample project
+Attach each modifier to its matching base component.
 
-[`sample/`](sample/) is a self-contained deck that exercises the theme end to
-end — title slide, section dividers, highlighted code, tables, grids,
-timeline, flow, an invert slide, and a closing slide — with no external assets
-required.
+| Base | Modifier | Effect |
+|---|---|---|
+| `lead` | `title` | Large institution logos at the top |
+| `institution-logo` | `unito-logo` | Taller logo variant |
+| `grid` | `cols-2`, `cols-3`, `cols-4` | Column count/layout |
+| `grid` | `tight-grid` | Reduced top margin and gaps |
+| `figure-box` | `short`, `tall` | Image-height variant |
+| `visual-split` | `narrow-image` | Fixed 550px figure column |
+| `visual-split` | `top` | Top-aligned panels |
+| `flow` | `tight-flow` | Reduced top margin |
+| `timeline` | `timeline-3`, `timeline-4` | Three/four stages |
+| `callout` | `warning` | Orange caution rule |
+| `callout` | `tight-callout` | Compact spacing and type |
+| `closing-grid` | `closing-grid-4` | Four contact columns |
+
+## Sample deck
+
+[`sample/deck.md`](sample/deck.md) is a 25-slide anonymous technical deck
+that exercises every documented public component. All names, links, metrics,
+and results are fictional; all assets are self-authored and local.
+
+Build with the package scripts:
 
 ```bash
 cd sample
-npm install        # not required — marp is used directly via npx
-npm run html       # -> sample/deck.html
-npm run pdf        # -> sample/deck.pdf  (requires a Chrome/Chromium)
+npm install
+npm run html
+npm run pdf   # requires Chrome/Chromium
 ```
 
-The `html` script is the zero-dependency path:
+Or run Marp directly:
 
 ```bash
 cd sample
-npx @marp-team/marp-cli deck.md --theme ../seafoam.css --output deck.html
+npx @marp-team/marp-cli deck.md \
+  --theme ../seafoam.css \
+  --allow-local-files \
+  --output deck.html
 ```
 
-Open `deck.html` in a browser (or `deck.pdf` in a viewer) to see the theme in
-action. The sample's front matter is the canonical starting point for any deck
-using this theme.
+See [`sample/README.md`](sample/README.md) for the sample-specific guide.
 
-## Screenshots
+## Gallery
 
-Rendered from `sample/deck.md` with Seafoam:
+| Title | Section divider |
+|---|---|
+| <img src="screenshots/slide-01.png" alt="Seafoam title slide" width="520"> | <img src="screenshots/slide-03.png" alt="Seafoam section divider" width="520"> |
+| **Focused code** | **Four-card grid** |
+| <img src="screenshots/slide-05.png" alt="Seafoam highlighted code slide" width="520"> | <img src="screenshots/slide-07.png" alt="Seafoam four-card grid slide" width="520"> |
 
-![Title (lead)](screenshots/slide-01.png)
+### Closing
 
-*Title (`lead`)*
-
-![Section divider](screenshots/slide-03.png)
-
-*Section divider*
-
-![Highlighted code](screenshots/slide-05.png)
-
-*Highlighted code*
-
-![Two-column grid](screenshots/slide-07.png)
-
-*Two-column grid*
-
-![Closing](screenshots/slide-11.png)
-
-*Closing*
+![Seafoam closing slide](screenshots/slide-11.png)
 
 ## Palette
 
-The light variant keeps Dracula's hue-to-role mapping but re-tunes each color
-for a `#f8fafc` background:
+Seafoam preserves Dracula's semantic color roles while increasing contrast on
+the light `#f8fafc` background.
 
-| Role | Dracula (dark) | Seafoam |
+| Role | Dracula | Seafoam |
 |---|---|---|
-| background | `#282a36` | `#f8fafc` |
-| background alt | `#21222c` | `#eef2f7` |
-| current line | `#44475a` | `#cbd5e1` |
-| foreground | `#f8f8f2` | `#0f172a` |
-| comment | `#6272a4` | `#475569` |
-| cyan | `#8be9fd` | `#006b73` |
-| green | `#50fa7b` | `#166534` |
-| orange | `#ffb86c` | `#92400e` |
-| pink | `#ff79c6` | `#8f3657` |
-| purple | `#bd93f9` | `#1e4f7a` |
-| red | `#ff5555` | `#b42318` |
-| yellow | `#f1fa8c` | `#654d00` |
-
----
+| Background | `#282a36` | `#f8fafc` |
+| Background alt | `#21222c` | `#eef2f7` |
+| Current line | `#44475a` | `#cbd5e1` |
+| Foreground | `#f8f8f2` | `#0f172a` |
+| Comment | `#6272a4` | `#475569` |
+| Cyan | `#8be9fd` | `#006b73` |
+| Green | `#50fa7b` | `#166534` |
+| Orange | `#ffb86c` | `#92400e` |
+| Pink | `#ff79c6` | `#8f3657` |
+| Purple | `#bd93f9` | `#1e4f7a` |
+| Red | `#ff5555` | `#b42318` |
+| Yellow | `#f1fa8c` | `#654d00` |
 
 ## Credits
 
-- Dracula palette and theme conventions: [Dracula Marp theme](https://github.com/dracula/marp) by Daniel Gisolfi.
-- Wave motifs and code/column styling: [Wave Marp theme](https://github.com/JuliusWiedemann/MarpThemeWave) by Julius Wiedemann.
-- Built on [Marp](https://marp.app/) / [Marpit](https://github.com/marp-team/marpit).
+Seafoam is adapted from established open-source Marp themes:
+
+- Palette, typography, Highlight.js colors, and theme conventions:
+  [Dracula Marp](https://github.com/dracula/marp) by Daniel Gisolfi.
+- Wave motifs and code/column inspiration:
+  [MarpThemeWave](https://github.com/JuliusWiedemann/MarpThemeWave) by Julius
+  Wiedemann.
+- Presentation engine: [Marp](https://marp.app/) and
+  [Marpit](https://github.com/marp-team/marpit).
 
 ## License
 
-MIT. Use it freely in decks and presentations.
+MIT. See [`LICENSE`](LICENSE).

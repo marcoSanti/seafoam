@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36">
+  <rect x="2" y="4" width="30" height="30" rx="7" fill="#1e4f7a"/>
+  <text x="17" y="27" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="800" fill="#ffffff" text-anchor="middle">S</text>
+  <text x="42" y="26" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#0f172a" text-anchor="start">SampleCo</text>
+</svg>
